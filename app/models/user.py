@@ -29,6 +29,7 @@ class User(Base):
     )
 
     is_active = Column(
-        Boolean,
-        default=True
-    )
+    Boolean,
+    nullable=False,
+    default=True
+)
