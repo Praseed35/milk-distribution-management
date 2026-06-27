@@ -8,11 +8,8 @@ from app.schemas.auth import LoginRequest
 from app.models.user import User
 from app.core.auth import get_current_user
 from app.core.roles import require_role
+from app.services import auth_service
 
-from app.core.security import (
-    verify_password,
-    create_access_token
-)
 
 router = APIRouter(
     prefix="/auth",
@@ -25,35 +22,17 @@ def login(
     db: Session = Depends(get_db)
 ):
 
-    user = (
-        db.query(User)
-        .filter(
-            User.username == login_data.username
-        )
-        .first()
+    access_token = auth_service.login(
+        db,
+        login_data
     )
 
-    if not user:
-        raise HTTPException(
-        status_code=401,
-        detail="Invalid username or password"
-)
+    if access_token is None:
 
-    if not verify_password(
-        login_data.password,
-        user.password_hash
-    ):
         raise HTTPException(
-        status_code=401,
-        detail="Invalid username or password"
+            status_code=401,
+            detail="Invalid username or password"
         )
-
-    access_token = create_access_token(
-    {
-        "sub": user.username,
-        "role": user.role
-    }
-)
 
     return {
         "access_token": access_token,
