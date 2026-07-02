@@ -42,8 +42,7 @@ class CustomerCreate(CustomerBase):
 
 class CustomerUpdate(CustomerBase):
 
-    is_active: bool
-
+    pass
 
 class CustomerResponse(CustomerBase):
 
