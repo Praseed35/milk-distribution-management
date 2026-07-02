@@ -19,8 +19,7 @@ if config.config_file_name is not None:
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
 from app.database import Base
-from app.models.user import User
-from app.models.route import Route
+import app.models
 
 target_metadata = Base.metadata
 

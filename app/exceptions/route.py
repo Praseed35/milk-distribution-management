@@ -29,3 +29,10 @@ class RouteNotFoundError(BusinessException):
         super().__init__(
             "Route not found."
         )
+
+class InactiveRouteError(Exception):
+
+    def __init__(self):
+        super().__init__(
+            "Selected route is inactive."
+        )
