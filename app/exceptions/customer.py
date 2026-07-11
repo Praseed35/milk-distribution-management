@@ -27,3 +27,10 @@ class SamePhoneNumberError(Exception):
         super().__init__(
             "Primary phone and alternate phone cannot be the same."
         )
+
+class InactiveCustomerError(Exception):
+
+    def __init__(self):
+        super().__init__(
+            "Customer is inactive."
+        )

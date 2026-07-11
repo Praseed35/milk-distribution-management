@@ -4,6 +4,7 @@ from sqlalchemy import DateTime
 from sqlalchemy import Integer
 from sqlalchemy import String
 from sqlalchemy.sql import func
+from sqlalchemy.orm import relationship
 
 from app.database import Base
 
@@ -51,3 +52,10 @@ class MilkType(Base):
         server_default=func.now(),
         onupdate=func.now()
     )
+
+#Relationships
+
+    customer_subscriptions = relationship(
+    "CustomerSubscription",
+    back_populates="milk_type"
+)

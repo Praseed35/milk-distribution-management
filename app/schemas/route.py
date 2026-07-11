@@ -45,3 +45,13 @@ class RouteResponse(RouteBase):
     model_config = ConfigDict(
         from_attributes=True
     )
+
+class RouteSummaryResponse(BaseModel):
+
+    id: int
+
+    route_name: str
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )

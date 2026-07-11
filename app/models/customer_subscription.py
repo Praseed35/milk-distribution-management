@@ -1,18 +1,29 @@
 from sqlalchemy import Boolean
 from sqlalchemy import Column
 from sqlalchemy import DateTime
+from sqlalchemy import Enum
 from sqlalchemy import ForeignKey
 from sqlalchemy import Integer
-from sqlalchemy import String
+from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
+from app.constants.shifts import Shift
 from app.database import Base
 
 
-class Customer(Base):
+class CustomerSubscription(Base):
 
-    __tablename__ = "customers"
+    __tablename__ = "customer_subscriptions"
+
+    __table_args__ = (
+        UniqueConstraint(
+            "customer_id",
+            "milk_type_id",
+            "shift",
+            name="uq_customer_milk_type_shift"
+        ),
+    )
 
     id = Column(
         Integer,
@@ -20,42 +31,26 @@ class Customer(Base):
         index=True
     )
 
-    customer_code = Column(
-        String(20),
-        unique=True,
-        nullable=False
-    )
-
-    customer_name = Column(
-        String(100),
-        nullable=False
-    )
-
-    primary_phone = Column(
-        String(15),
-        unique=True,
-        nullable=False
-    )
-
-    alternate_phone = Column(
-        String(15),
-        nullable=True
-    )
-
-    address = Column(
-        String(255),
-        nullable=True
-    )
-
-    route_id = Column(
+    customer_id = Column(
         Integer,
-        ForeignKey("routes.id"),
+        ForeignKey("customers.id"),
         nullable=False
     )
 
-    remarks = Column(
-        String(255),
-        nullable=True
+    milk_type_id = Column(
+        Integer,
+        ForeignKey("milk_types.id"),
+        nullable=False
+    )
+
+    shift = Column(
+        Enum(Shift),
+        nullable=False
+    )
+
+    quantity = Column(
+        Integer,
+        nullable=False
     )
 
     is_active = Column(
@@ -75,14 +70,12 @@ class Customer(Base):
         onupdate=func.now()
     )
 
-    route = relationship(
-        "Route",
-        back_populates="customers"
+    customer = relationship(
+        "Customer",
+        back_populates="customer_subscriptions"
     )
 
-#Relationships
-
-    customer_subscriptions = relationship(
-    "CustomerSubscription",
-    back_populates="customer"
-)
+    milk_type = relationship(
+        "MilkType",
+        back_populates="customer_subscriptions"
+    )

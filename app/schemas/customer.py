@@ -59,3 +59,15 @@ class CustomerResponse(CustomerBase):
     model_config = ConfigDict(
         from_attributes=True
     )
+
+class CustomerSummaryResponse(BaseModel):
+
+    id: int
+
+    customer_code: str
+
+    customer_name: str
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )

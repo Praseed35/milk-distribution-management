@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 
 from app.exceptions.milk_type_exceptions import DuplicateMilkTypeNameError
 from app.exceptions.milk_type_exceptions import DuplicateQuantityError
-from app.exceptions.milk_type_exceptions import MilkTypeNotFoundError
+from app.exceptions.milk_type_exceptions import MilkTypeNotFoundError,InactiveMilkTypeError
 from app.models.milk_type import MilkType
 from app.schemas.milk_type import MilkTypeCreate
 from app.schemas.milk_type import MilkTypeUpdate
@@ -148,3 +148,25 @@ def delete_by_id(
     db.refresh(existing_milk_type)
 
     return existing_milk_type
+
+
+def get_by_id_internal(
+        db: Session,
+        milk_type_id: int
+) -> MilkType:
+
+    milk_type = (
+        db.query(MilkType)
+        .filter(
+            MilkType.id == milk_type_id
+        )
+        .first()
+    )
+
+    if not milk_type:
+        raise MilkTypeNotFoundError()
+
+    if not milk_type.is_active:
+        raise InactiveMilkTypeError()
+
+    return milk_type

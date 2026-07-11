@@ -14,6 +14,7 @@ from app.routers.auth import router as auth_router
 from app.routers.routes import router as route_router
 from app.routers.customers import router as customer_router
 from app.routers.milk_types import router as milk_type_router
+from app.routers.customer_subscriptions import router as customer_subscription_router
 
 
 
@@ -26,6 +27,7 @@ app.include_router(auth_router)
 app.include_router(route_router)
 app.include_router(customer_router)
 app.include_router(milk_type_router)
+app.include_router(customer_subscription_router)
 
 @app.get("/")
 def home():

@@ -8,7 +8,8 @@ from app.schemas.customer import CustomerCreate,CustomerResponse,CustomerUpdate
 from app.exceptions.customer import (
     DuplicatePrimaryPhoneError,
     CustomerNotFoundError,
-    SamePhoneNumberError
+    SamePhoneNumberError,
+    InactiveCustomerError
 )
 
 from app.exceptions.route import (
@@ -195,5 +196,27 @@ def delete_by_id(
 
     db.commit()
     db.refresh(customer)
+
+    return customer
+    
+
+def get_by_id_internal(
+        db: Session,
+        customer_id: int
+) -> Customer:
+
+    customer = (
+        db.query(Customer)
+        .filter(
+            Customer.id == customer_id
+        )
+        .first()
+    )
+
+    if not customer:
+        raise CustomerNotFoundError()
+
+    if not customer.is_active:
+        raise InactiveCustomerError()
 
     return customer
