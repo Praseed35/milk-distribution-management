@@ -19,7 +19,8 @@ from app.schemas.customer_subscription import (
 )
 
 from app.exceptions.customer_subscription_exceptions import (
-    CustomerSubscriptionNotFoundError,DuplicateSubscriptionError
+    CustomerSubscriptionNotFoundError,DuplicateSubscriptionError,
+    InactiveCustomerSubscriptionError
 )
 
 from app.exceptions.customer import (
@@ -257,3 +258,25 @@ def delete_by_id(
     db.refresh(existing_subscription)
 
     return existing_subscription
+
+
+def get_by_id_internal(
+        db: Session,
+        subscription_id: int
+) -> CustomerSubscription:
+
+    subscription = (
+        db.query(CustomerSubscription)
+        .filter(
+            CustomerSubscription.id == subscription_id
+        )
+        .first()
+    )
+
+    if not subscription:
+        raise CustomerSubscriptionNotFoundError()
+
+    if not subscription.is_active:
+        raise InactiveCustomerSubscriptionError()
+
+    return subscription

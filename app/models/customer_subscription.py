@@ -79,3 +79,8 @@ class CustomerSubscription(Base):
         "MilkType",
         back_populates="customer_subscriptions"
     )
+
+    delivery_exceptions = relationship(
+        "DeliveryException",
+        back_populates="customer_subscription"
+    )
